@@ -1,4 +1,5 @@
 
+#exec(open("b.py").read())
 
 # Python version
 import sys
@@ -44,11 +45,25 @@ ainverse = numpy.linalg.inv(aarray)
 #dfainverse = pandas.DataFrame({'a': ainverse[:, 0], 'b':ainverse[:, 1], 'c':ainverse[:, 2], 'd':ainverse[:, 3], 'e':ainverse[:, 4], 'f':ainverse[:, 5], 'g':ainverse[:, 6], 'h':ainverse[:, 7], 'i':ainverse[:, 8], 'j':ainverse[:, 9]})
 # Load training dataset
 trainarr = read_csv('train.txt', sep=" ", names=['tra', 'trb', 'trc', 'trd', 'tre', 'trf', 'trg', 'trh', 'tri', 'trj', 'trout'])
-#take the first 10 columns of each row and convert it to numpy array (using the first 5000 rows for testing)
-smplesize = 5000
-nptrainarrsmpl = trainarr.iloc[:smplesize,:10].to_numpy()
+
+
+
+#take the first 10 columns of  row and convert it to numpy array (using the first 5000 rows for testing)
+#here we use the first 5000 rows
+#smplesize = 5000
+#nptrainarrsmpl = trainarr.iloc[:smplesize,:10].to_numpy()
+##grab the 11th column of the training set to keep track of which row is a 'zero' and which is 'one'
+#index = trainarr.iloc[:smplesize,10].to_numpy()
+
+
+#here we use every 50th row
+smplesize = 50
+nptrainarrsmpl = trainarr.iloc[::smplesize,:10].to_numpy()
 #grab the 11th column of the training set to keep track of which row is a 'zero' and which is 'one'
-index = trainarr.iloc[:smplesize,10].to_numpy()
+index = trainarr.iloc[::smplesize,10].to_numpy()
+
+
+
 
 #multiply that by the inverse of 'a'
 smpleout = nptrainarrsmpl.dot(ainverse)
@@ -86,17 +101,17 @@ npO = numpy.array(O)
 for i in range(5):
 	columns = i
 	title = "(x{},x{}) coloured zeros vs ones".format((i*2),((i*2)+1))
-	
+
 	One = (npO[columns,:,0],npO[columns,:,1])
 	Zero = (npZ[columns,:,0],npZ[columns,:,1])
 
 
 
-	data = (One, Zero)
-	colors = ("orange", "blue")
+	data = (Zero, One)
+	colors = ("blue", "orange")
 	groups = ("0", "1")
 	 #remark
-	 #its definitely the '0' rows that result in an X and O pattern
+	 #its definitely the '1' rows that result in an X and O pattern
 
 	fig = plt.figure()
 	ax = fig.add_subplot(1, 1, 1, facecolor="1.0")

@@ -1,0 +1,1 @@
+Its called hugs and kisses because once you push the sets (sans the final column) through the inverse of a.txt and plot them according to the final columns result, the "1" columns roughly group together into the pattern of an 'X' and an 'O'. Hugs and kisses, Xs and Os.
