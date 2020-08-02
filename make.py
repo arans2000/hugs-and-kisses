@@ -67,98 +67,32 @@ validatex = read_csv('test.txt', sep=" ", names=['tra', 'trb', 'trc', 'trd', 'tr
 #y
 validatey = read_csv('key.txt', sep=" ", names=['trout'])
 
-#lets pick some algorithms to utilise
-# Split-out validation dataset
+#try out a few models
 
 
-models = []
-models.append(('LR', LogisticRegression(solver='liblinear', multi_class='ovr')))
-models.append(('LDA', LinearDiscriminantAnalysis()))
-models.append(('KNN', KNeighborsClassifier()))
-models.append(('CART', DecisionTreeClassifier()))
-models.append(('NB', GaussianNB()))
-#models.append(('SVM', SVC(gamma='auto')))
-#credit to machinelearningmastery.com for this model list
-#we'll just go with LR and SVM for now
-
-#testing the effectivenesss of the machines on the training set
-results = []
-names = []
-print('Testing models:')
-for name, model in models:
-	kfold = StratifiedKFold(n_splits=10, random_state=1, shuffle=True)
-	cv_results = cross_val_score(model, trainsetx, trainsety, cv=kfold, scoring='f1')
-	results.append(cv_results)
-	names.append(name)
-	print('%s: %f (%f)' % (name, cv_results.mean(), cv_results.std()))
-
-print('end test \n \n')
-#scoring = accuracy results:
-#SVM seems most effective but become exponentially long to train with dataset taking two minutes to reach a 53~% accuracy
-#NB takes significantly less time and is second most accurate reaching 51.4% accuracy with the same 1/10 slice of the training set
-#however larger subsets of the training data do not substantially increase this score
-#results from running 1/10 of training set
-#LR: 0.498900 (0.016885)
-#LDA: 0.499300 (0.017855)
-#KNN: 0.506900 (0.018097)
-#CART: 0.497400 (0.021086)
-#NB: 0.514000 (0.014839)
-#SVM: 0.533000 (0.011593)
-
-
-#scoring = f1 results:
-#higher results across the board particularly for logistic regression and linear discriminant analysis
-#LR: 0.562779 (0.019180)
-#LDA: 0.562353 (0.019817)
-#KNN: 0.510740 (0.017884)
-#CART: 0.505249 (0.020554)
-#NB: 0.511954 (0.018873)
-#SVM: 0.551646 (0.012082)
-#running full set through  LR and LDA increased f1 scores to 66%
-#LR: 0.664890 (0.004952)
-#LDA: 0.664872 (0.004944)
-
-#ran 1/2 set of training set for all:
-#LR: 0.656386 (0.011779)
-#LDA: 0.656199 (0.011819)
-#KNN: 0.525533 (0.006223)
-#CART: 0.515621 (0.007442)
-#NB: 0.536666 (0.012270)
-#SVM: 0.583134 (0.009338)
-#LR adn LDA came out the clear winners, and SVM simply took too long to process to reasonably justify it, so I'll settle for LR and LDA
-
-#They will hand out all kinds of dangerous mind altering drugs for basically no money. Heres the thing, you can tell by the people in the chat making fun of the fact that im clearly balding, ive looked into this obviously and there is a medication that is known to be quite good that you can self-prescribe. You can literally ask for it and theyll give it to you, you dont even have to seee a doctor for it, and the warning label on the side "this may make you want to kill yourself". Like, theyll hand out depression giving drugs if it might give you a little bit more hair for longer. But if you desperately want to alleviate gender dysphoria, theyre like "yea were gonna need half a decade of nonsense first". Like, fuck off. 
-
-# train machine
-
-trainfraction = 1 
+#model =  LogisticRegression(solver='liblinear', multi_class='ovr')
+#model =  LinearDiscriminantAnalysis()
+#model =  KNeighborsClassifier()
+#model =  DecisionTreeClassifier()
+#model =  GaussianNB()
+#model = SVC(gamma='auto')
+model = SVC( gamma=0.4)
+#divvy up the train set for SVC
+trainfraction = 5 
 trainset = trainarr.iloc[::trainfraction,:]
 trainsetx = trainarr.iloc[::trainfraction,:10]
 trainsety = trainarr.iloc[::trainfraction,10]
-print('training LR and LDA')
-print('predicting with LR and LDA \n \n ')
-LR = LogisticRegression(solver='liblinear', multi_class='ovr')
-LDA = LinearDiscriminantAnalysis()
+print('training {}'.format(model))
+print('predicting with {} \n \n '.format(model))
 
 
-LR.fit(trainsetx, trainsety)
-LRpredictions = LR.predict(validatex)
-print('Logistic Regression prediction analysis:')
-print(accuracy_score(validatey, LRpredictions))
-print(confusion_matrix(validatey, LRpredictions))
-print(classification_report(validatey, LRpredictions))
 
-
-LDA.fit(trainsetx, trainsety)
-LDApredictions = LDA.predict(validatex)
-print('\n \n \'Logistic discriminant analysis\' prediction analysis:')
-print(accuracy_score(validatey, LDApredictions))
-print(confusion_matrix(validatey, LDApredictions))
-print(classification_report(validatey, LDApredictions))
-
-
-#The model result analysis isnt too promising, but the proof is in the scatterplot!
-
+model.fit(trainsetx, trainsety)
+modelpredictions = model.predict(validatex)
+print('\'{}\' analysis:'.format(model))
+print(accuracy_score(validatey, modelpredictions))
+print(confusion_matrix(validatey, modelpredictions))
+print(classification_report(validatey, modelpredictions))
 
 
 #graphing the key set
@@ -217,7 +151,7 @@ ax = fig.add_subplot(1, 1, 1, facecolor="1.0")
 
 for data, color, group in zip(data, colors, groups):
 	x, y = data
-	ax.scatter(x, y, alpha=0.1, c=color, edgecolors='none', s=30, label=group)
+	ax.scatter(x, y, alpha=0.05, c=color, edgecolors='none', s=30, label=group)
 
 plt.title(title)
 plt.legend(loc=2)
@@ -235,7 +169,7 @@ pO = [[]] * 5 #initialise list of 'one' rows
 
 
 #populate our lists with values based on 'zero'/'one' rows and which columns they occupied
-for X, Y, ind in zip(evensmpleout, oddsmpleout, LRpredictions):
+for X, Y, ind in zip(evensmpleout, oddsmpleout, modelpredictions):
 	if ind == 0:
 		pZ[0].append([X[0],Y[0]])
 		pZ[1].append([X[1],Y[1]])
@@ -257,9 +191,9 @@ npO = numpy.array(pO)
 
 
 
-title = "LR predicted values: zeros vs ones \n LDA predicts a disproportionate amount of ones to zeros"
+title = "{} predicted values: zeros vs ones".format(model)
 
-One = (npO[:,::5,0],npO[:,::5,1])
+One = (npO[:,:,0],npO[:,:,1])
 Zero = (npZ[:,:,0],npZ[:,:,1])
 
 
@@ -273,10 +207,22 @@ ax = fig.add_subplot(1, 1, 1, facecolor="1.0")
 
 for data, color, group in zip(data, colors, groups):
 	x, y = data
-	ax.scatter(x, y, alpha=0.25, c=color, edgecolors='none', s=30, label=group)
+	ax.scatter(x, y, alpha=0.05, c=color, edgecolors='none', s=30, label=group)
 
 plt.title(title)
 plt.legend(loc=2)
 plt.show()
 
+#note: decision tree classifier assigns a more accurate distribution of ones to zeros then LDA, LR or KNN.
+# naieve bays accomplishes similar results
+#
+print("predicted zeros and ones, \n zeros:")
+print(len(pO[0]))
+print("ones:")
+print(len(pZ[0]))
+#Will settle on SVC
+print("creating {}...".format(sys.argv[1]))
 
+with open(sys.argv[1], 'w') as f:
+    for item in modelpredictions:
+        f.write("{}\n".format(item))
