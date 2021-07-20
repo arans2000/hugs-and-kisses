@@ -1,4 +1,5 @@
-
+# a.txt , test.txt and train.txt are all arrays, 
+# when the test.txt array is multiplies by the inverse of the a.txt array it should form a pattern based on the machine predicted binary values of its rows
 
 # Python version
 import sys
