@@ -79,7 +79,10 @@ validatey = read_csv('key.txt', sep=" ", names=['trout'])
 #model =  GaussianNB()
 #model = SVC(gamma='auto')
 model = SVC( gamma=0.4)
-#divvy up the train set for SVC
+
+# divvy up the train set for SVC
+# SVC can process more data into a model faster so I expand the subset of the training data used
+
 trainfraction = 5 
 trainset = trainarr.iloc[::trainfraction,:]
 trainsetx = trainarr.iloc[::trainfraction,:10]
