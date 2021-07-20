@@ -55,7 +55,7 @@ trainset = trainarr.iloc[::trainfraction,:]
 #x
 trainsetx = trainarr.iloc[::trainfraction,:10]
 
-#grab the 11th column of the training set to keep track of which row is a 'zero' and which is 'one'
+#grab the 11th column from the corresponding rows of the training set to keep track of which row is a 'zero' and which is 'one'
 #y
 trainsety = trainarr.iloc[::trainfraction,10]
 
