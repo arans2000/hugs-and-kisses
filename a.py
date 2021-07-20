@@ -1,3 +1,6 @@
+#program used to get to grips with the tools in the project
+
+
 #first group is top left skewed diagonally, second group is bottom right
 #third group is  top left skewed horizontally, fourth group is a long diagonal bottom left to top right
 #fifth group is a very dispersed grouping to the right
