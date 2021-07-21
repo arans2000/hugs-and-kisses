@@ -91,10 +91,14 @@ print('training {}'.format(model))
 print('predicting with {} \n \n '.format(model))
 
 
-
+# model created
 model.fit(trainsetx, trainsety)
+# model run on test set
 modelpredictions = model.predict(validatex)
+
 print('\'{}\' analysis:'.format(model))
+
+# analyse predicted outcome against expected result
 print(accuracy_score(validatey, modelpredictions))
 print(confusion_matrix(validatey, modelpredictions))
 print(classification_report(validatey, modelpredictions))
@@ -218,7 +222,7 @@ plt.title(title)
 plt.legend(loc=2)
 plt.show()
 
-#note: decision tree classifier assigns a more accurate distribution of ones to zeros then LDA, LR or KNN.
+# note: decision tree classifier assigns a more accurate distribution of ones to zeros then LDA, LR or KNN.
 # naieve bays accomplishes similar results
 #
 print("predicted zeros and ones, \n zeros:")
