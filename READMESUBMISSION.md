@@ -6,4 +6,4 @@ Make sure train.txt, test.txt, key.txt and a.txt are in the directory you execut
 
 repo can be found at
 
-https://github.com/aran69/hugs-and-kisses
+https://github.com/arans2000/hugs-and-kisses
